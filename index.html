@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TypeMaster — Ajay Malik Ujhana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://googleapis.com" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0f1e;
+    --surface: #111827;
+    --surface2: #1a2236;
+    --border: rgba(255,255,255,0.08);
+    --accent: #4f9cf9;
+    --accent2: #7c5cbf;
+    --gold: #f0b429;
+    --green: #22c55e;
+    --red: #ef4444;
+    --text: #f0f4ff;
+    --muted: #8892a4;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+    --pending: #8892a4;
+    --cursor: #4f9cf9;
+  }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #0d1b3e 0%, #1a0a2e 50%, #0a1628 100%);
+    border-bottom: 1px solid rgba(79,156,249,0.2);
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9rem 0;
+    gap: 1rem;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+
+  .logo-emblem {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, #4f9cf9, #7c5cbf);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 20px;
+    color: #fff;
+    letter-spacing: -1px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(79,156,249,0.4);
+  }
+
+  .logo-emblem::after {
+    content: '';
+    position: absolute;
+    top: -10px; right: -10px;
+    width: 30px; height: 30px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+  }
+
+  .logo-text h1 {
+    font-size: 18px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #4f9cf9, #7c5cbf);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+  }
+
+  .logo-text span {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 400;
+    letter-spacing: 0.5px;
+  }
+
+  .welcome-banner {
+    flex: 1;
+    text-align: center;
+  }
+
+  .welcome-banner p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+
+  .welcome-banner h2 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .welcome-banner .hindi {
+    font-size: 13px;
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .header-stats {
+    display: flex;
+    gap: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .hstat {
+    text-align: center;
+  }
+
+  .hstat-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .hstat-label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem 3rem;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 1.5rem;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .panel-head {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+  }
+
+  .level-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.7rem 1rem;
+    width: 100%;
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: left;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+  }
+
+  .level-btn:last-child { border-bottom: none; }
+  .level-btn:hover { background: var(--surface2); color: var(--text); }
+  .level-btn.active { background: rgba(79,156,249,0.12); color: var(--accent); }
+  .level-btn.active .level-dot { background: var(--accent); }
+
+  .level-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .level-info { flex: 1; }
+  .level-name { font-weight: 600; font-size: 13px; }
+  .level-desc { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .level-btn.active .level-desc { color: rgba(79,156,249,0.7); }
+
+  .lesson-list { max-height: 280px; overflow-y: auto; }
+  .lesson-list::-webkit-scrollbar { width: 4px; }
+  .lesson-list::-webkit-scrollbar-track { background: transparent; }
+  .lesson-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .lesson-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: all 0.15s;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .lesson-item:last-child { border-bottom: none; }
+  .lesson-item:hover { background: var(--surface2); color: var(--text); }
+  .lesson-item.active { background: rgba(79,156,249,0.1); color: var(--accent); }
+
+  .lesson-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    background: var(--surface2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    min-width: 28px;
+    text-align: center;
+  }
+
+  .lesson-item.active .lesson-num {
+    background: rgba(79,156,249,0.2);
+    color: var(--accent);
+  }
+
+  /* Timer panel */
+  .timer-panel .panel-body { padding: 1rem; }
+
+  .timer-select {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 0.75rem;
+  }
+
+  .time-btn {
+    padding: 0.5rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    transition: all 0.15s;
+    text-align: center;
+  }
+
+  .time-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .time-btn.active { background: rgba(79,156,249,0.15); border-color: var(--accent); color: var(--accent); }
+
+  .custom-time {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .custom-time input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 0.4rem 0.6rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    outline: none;
+  }
+
+  .custom-time input:focus { border-color: var(--accent); }
+  .custom-time span { font-size: 11px; color: var(--muted); flex-shrink: 0; }
+
+  /* ── TYPING AREA ── */
+  .typing-area { display: flex; flex-direction: column; gap: 1rem; }
+
+  .lesson-title-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .lesson-title-bar h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .lesson-tags { display: flex; gap: 6px; }
+
+  .tag {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 99px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .tag-beginner { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .tag-intermediate { background: rgba(251,191,36,0.15); color: #fbbf24; }
+  .tag-expert { background: rgba(239,68,68,0.15); color: #f87171; }
+  .tag-focus { background: rgba(79,156,249,0.15); color: var(--accent); }
+
+  /* Stats bar */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.6rem;
+    text-align: center;
+  }
+
+  .stat-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .stat-val.accent { color: var(--accent); }
+  .stat-val.green { color: var(--green); }
+  .stat-val.gold { color: var(--gold); }
+  .stat-val.red { color: var(--red); }
+
+  .stat-lbl {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 3px;
+  }
+
+  /* Timer ring */
+  .timer-ring-wrap {
+    position: relative;
+    width: 52px;
+    height: 52px;
+    margin: 0 auto;
+  }
+
+  .timer-ring-wrap svg { transform: rotate(-90deg); }
+  .timer-ring-wrap .ring-bg { fill: none; stroke: var(--surface2); stroke-width: 4; }
+  .timer-ring-wrap .ring-fg { fill: none; stroke: var(--accent); stroke-width: 4; stroke-linecap: round; transition: stroke-dashoffset 1s linear; }
+  .timer-val {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  /* Typing box */
+  .typing-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .typing-box-header {
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .typing-box-header .lesson-info {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .typing-box-header .lesson-info strong {
+    color: var(--accent);
+  }
+
+  .progress-bar-wrap {
+    flex: 1;
+    max-width: 200px;
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 0 1rem;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 2px;
+    transition: width 0.1s;
+    width: 0%;
+  }
+
+  /* Text display */
+  .text-display {
+    padding: 1.5rem 1.5rem 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.8;
+    letter-spacing: 1px;
+    min-height: 120px;
+    user-select: none;
+  }
+
+  .char {
+    display: inline-block;
+    transition: color 0.05s, background 0.05s;
+    border-radius: 3px;
+    padding: 0 1px;
+  }
+
+  .char.pending { color: var(--pending); }
+  .char.correct { color: transparent; }
+  .char.wrong {
+    color: var(--wrong);
+    background: rgba(239,68,68,0.15);
+    text-decoration: underline;
+    text-decoration-color: var(--red);
+  }
+  .char.cursor {
+    border-left: 2px solid var(--cursor);
+    animation: blink 1s step-end infinite;
+    margin-left: -1px;
+  }
+
+  @keyframes blink {
+    0%, 100% { border-color: var(--cursor); }
+    50% { border-color: transparent; }
+  }
+
+  /* Input layer */
+  .input-layer {
+    padding: 0.75rem 1.5rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-top: 1px solid var(--border);
+  }
+
+  .type-hint {
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    flex: 1;
+  }
+
+  /* Hidden input trick */
+  #hidden-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    top: -9999px;
+  }
+
+  /* Control bar */
+  .control-bar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 0.55rem 1.2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn:hover { background: var(--surface2); border-color: rgba(255,255,255,0.15); }
+  .btn-primary { background: rgba(79,156,249,0.15); border-color: rgba(79,156,249,0.4); color: var(--accent); }
+  .btn-primary:hover { background: rgba(79,156,249,0.25); }
+  .btn-danger { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.3); color: #f87171; }
+  .btn-danger:hover { background: rgba(239,68,68,0.2); }
+  .btn-success { background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.3); color: #4ade80; }
+  .btn-success:hover { background: rgba(34,197,94,0.2); }
+
+  /* Keyboard display */
+  .keyboard-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1rem 1.5rem;
+    overflow-x: auto;
+  }
+
+  .keyboard {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 600px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .kb-row {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+  }
+
+  .key {
+    height: 36px;
+    min-width: 36px;
+    padding: 0 6px;
+    background: var(--surface2);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 3px solid rgba(0,0,0,0.4);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    transition: all 0.08s;
+    cursor: default;
+    user-select: none;
+  }
+
+  .key.wide-15 { min-width: 54px; }
+  .key.wide-2 { min-width: 72px; }
+  .key.wide-25 { min-width: 90px; }
+  .key.wide-3 { min-width: 108px; }
+  .key.space { min-width: 280px; }
+
+  .key.highlight {
+    background: rgba(79,156,249,0.3);
+    border-color: var(--accent);
+    color: var(--accent);
+    border-bottom-color: rgba(79,156,249,0.6);
+  }
+
+  .key.pressed {
+    background: rgba(79,156,249,0.5);
+    border-color: var(--accent);
+    color: #fff;
+    transform: translateY(2px);
+    border-bottom-width: 1px;
+  }
+
+  .key.wrong-press {
+    background: rgba(239,68,68,0.3);
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  /* Result overlay */
+  .result-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,15,30,0.9);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+  }
+
+  .result-overlay.show { display: flex; }
+
+  .result-card {
+    background: var(--surface);
+    border: 1px solid rgba(79,156,249,0.3);
+    border-radius: 20px;
+    padding: 2.5rem;
+    width: 480px;
+    max-width: 90vw;
+    text-align: center;
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .result-card h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .result-card .sub { font-size: 14px; color: var(--muted); margin-bottom: 2rem; }
+
+  .result-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+
+  .res-stat {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 1rem 0.5rem;
+  }
+
+  .res-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--accent);
+  }
+
+  .res-lbl {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .result-card .btn { width: 100%; justify-content: center; margin-top: 8px; }
+
+  /* Finger guide */
+  .finger-guide {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 3px;
+    margin-bottom: 6px;
+  }
+
+  .finger-col {
+    text-align: center;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.2px;
+  }
+
+  /* Status flash */
+  .status-flash {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.6rem 1.2rem;
+    font-size: 14px;
+    font-weight: 600;
+    transition: transform 0.3s, opacity 0.3s;
+    opacity: 0;
+    z-index: 300;
+    pointer-events: none;
+  }
+
+  .status-flash.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .status-flash.good { border-color: var(--green); color: var(--green); }
+  .status-flash.bad { border-color: var(--red); color: var(--red); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  @media (max-width: 900px) {
+    .main-wrap { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .stats-bar { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo-area">
+      <div class="logo-emblem"><!--AM--><img src="C:\Users\dell\Downloads\ajtypelogo1.png" width="51 px"></div>
+      <div class="logo-text">
+        <h1>TypeMaster</h1>
+        <span>Ajay Malik Ujhana</span>
+      </div>
+    </div>
+
+    <div class="welcome-banner">
+      <!-- <p>🌐 You have entered</p> -->
+      <h2>🚩 जय श्री राम 🚩JAI SHREE RAM</h2>
+      <h2>Welcome to MR. AJAY MALIK UJHANA'S</h2>
+      <div class="hindi">✨ Online World ✨</div>
+    </div>
+
+    <div class="header-stats">
+      <div class="hstat">
+        <div class="hstat-val" id="hdr-wpm">0</div>
+        <div class="hstat-label">WPM</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-val" id="hdr-acc">100%</div>
+        <div class="hstat-label">Accuracy</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-val" id="hdr-streak">0</div>
+        <div class="hstat-label">Best Streak</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="main-wrap">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <!-- Level selector -->
+    <div class="panel">
+      <div class="panel-head">Difficulty Level</div>
+      <button class="level-btn active" onclick="setLevel('beginner')">
+        <div class="level-dot"></div>
+        <div class="level-info">
+          <div class="level-name">Beginner</div>
+          <div class="level-desc">Home row & basic keys</div>
+        </div>
+        <span style="font-size:10px; color:inherit;">●●○○</span>
+      </button>
+      <button class="level-btn" onclick="setLevel('intermediate')">
+        <div class="level-dot"></div>
+        <div class="level-info">
+          <div class="level-name">Intermediate</div>
+          <div class="level-desc">All rows + capitals</div>
+        </div>
+        <span style="font-size:10px; color:inherit;">●●●○</span>
+      </button>
+      <button class="level-btn" onclick="setLevel('expert')">
+        <div class="level-dot"></div>
+        <div class="level-info">
+          <div class="level-name">Expert</div>
+          <div class="level-desc">Numbers, symbols, speed</div>
+        </div>
+        <span style="font-size:10px; color:inherit;">●●●●</span>
+      </button>
+    </div>
+
+    <!-- Lesson list -->
+    <div class="panel">
+      <div class="panel-head">Lessons</div>
+      <div class="lesson-list" id="lesson-list"></div>
+    </div>
+
+    <!-- Timer selector -->
+    <div class="panel timer-panel">
+      <div class="panel-head">Session Timer</div>
+      <div class="panel-body">
+        <div class="timer-select" id="timer-select">
+          <button class="time-btn active" onclick="setTimer(60)">1 min</button>
+          <button class="time-btn" onclick="setTimer(120)">2 min</button>
+          <button class="time-btn" onclick="setTimer(180)">3 min</button>
+          <button class="time-btn" onclick="setTimer(300)">5 min</button>
+        </div>
+        <div class="custom-time">
+          <input type="number" id="custom-min" placeholder="0" min="1" max="60">
+          <span>min custom</span>
+          <button class="btn" style="padding:0.3rem 0.6rem; font-size:12px;" onclick="applyCustomTimer()">Set</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Personal records -->
+    <div class="panel">
+      <div class="panel-head">Personal Best</div>
+      <div style="padding: 0.75rem 1rem;">
+        <div style="display:flex; justify-content:space-between; padding: 0.4rem 0; border-bottom: 1px solid var(--border); font-size:12px;">
+          <span style="color:var(--muted)">Best WPM</span>
+          <span style="font-family:'JetBrains Mono'; color:var(--gold); font-weight:700;" id="pb-wpm">—</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding: 0.4rem 0; border-bottom: 1px solid var(--border); font-size:12px;">
+          <span style="color:var(--muted)">Best Accuracy</span>
+          <span style="font-family:'JetBrains Mono'; color:var(--green); font-weight:700;" id="pb-acc">—</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding: 0.4rem 0; font-size:12px;">
+          <span style="color:var(--muted)">Sessions Done</span>
+          <span style="font-family:'JetBrains Mono'; color:var(--accent); font-weight:700;" id="pb-sessions">0</span>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- TYPING AREA -->
+  <main class="typing-area">
+
+    <div class="lesson-title-bar">
+      <div>
+        <h3 id="lesson-name">Lesson 1 — Home Row Keys</h3>
+        <div style="font-size:12px; color:var(--muted); margin-top:2px;" id="lesson-focus">Focus: a s d f g h j k l ;</div>
+      </div>
+      <div class="lesson-tags">
+        <span class="tag tag-beginner" id="level-tag">Beginner</span>
+        <span class="tag tag-focus" id="focus-tag">Home Row</span>
+      </div>
+    </div>
+
+    <!-- Stats bar -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-val accent" id="wpm-val">0</div>
+        <div class="stat-lbl">WPM</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val green" id="acc-val">100%</div>
+        <div class="stat-lbl">Accuracy</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val gold" id="correct-val">0</div>
+        <div class="stat-lbl">Correct</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val red" id="errors-val">0</div>
+        <div class="stat-lbl">Errors</div>
+      </div>
+      <div class="stat-card">
+        <div class="timer-ring-wrap" style="width:52px; height:52px; margin:0 auto;">
+          <svg width="52" height="52" viewBox="0 0 52 52">
+            <circle class="ring-bg" cx="26" cy="26" r="22"/>
+            <circle class="ring-fg" id="timer-ring" cx="26" cy="26" r="22" stroke-dasharray="138.2" stroke-dashoffset="0"/>
+          </svg>
+          <div class="timer-val" id="timer-val">60</div>
+        </div>
+        <div class="stat-lbl" style="margin-top:4px;">Timer</div>
+      </div>
+    </div>
+
+    <!-- Typing box -->
+    <div class="typing-box" id="typing-box" onclick="focusInput()">
+      <div class="typing-box-header">
+        <div class="lesson-info">Lesson: <strong id="current-lesson-label">1 of 5</strong></div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+        <div style="font-size:12px; color:var(--muted);" id="repeat-label">Loop 1</div>
+      </div>
+      <div class="text-display" id="text-display"></div>
+      <div class="input-layer">
+        <div class="type-hint" id="type-hint">👆 Click here or press any key to start typing...</div>
+        <button class="btn btn-primary" onclick="startSession()" id="start-btn">▶ Start</button>
+        <button class="btn btn-danger" onclick="resetSession()" id="reset-btn">↺ Reset</button>
+      </div>
+    </div>
+
+    <!-- Control bar -->
+    <div class="control-bar">
+      <button class="btn" onclick="prevLesson()">← Prev Lesson</button>
+      <button class="btn btn-success" onclick="startSession()">▶ Practice</button>
+      <button class="btn" onclick="nextLesson()">Next Lesson →</button>
+    </div>
+
+    <!-- Keyboard -->
+    <div class="keyboard-wrap">
+      <div class="keyboard" id="keyboard"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Hidden input -->
+<input type="text" id="hidden-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+
+<!-- Result overlay -->
+<div class="result-overlay" id="result-overlay">
+  <div class="result-card">
+    <h2>Session Complete!</h2>
+    <div class="sub" id="result-sub">Great work! Here are your results.</div>
+    <div class="result-grid">
+      <div class="res-stat">
+        <div class="res-val" id="res-wpm">0</div>
+        <div class="res-lbl">WPM</div>
+      </div>
+      <div class="res-stat">
+        <div class="res-val" id="res-acc">0%</div>
+        <div class="res-lbl">Accuracy</div>
+      </div>
+      <div class="res-stat">
+        <div class="res-val" id="res-correct">0</div>
+        <div class="res-lbl">Correct</div>
+      </div>
+      <div class="res-stat">
+        <div class="res-val" id="res-errors">0</div>
+        <div class="res-lbl">Errors</div>
+      </div>
+      <div class="res-stat">
+        <div class="res-val" id="res-time">0s</div>
+        <div class="res-lbl">Time</div>
+      </div>
+      <div class="res-stat">
+        <div class="res-val" id="res-loops">0</div>
+        <div class="res-lbl">Loops</div>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="restartSameLesson()">↺ Practice Again</button>
+    <button class="btn" onclick="nextLesson(); closeResult();">→ Next Lesson</button>
+    <button class="btn btn-danger" onclick="closeResult()">✕ Close</button>
+  </div>
+</div>
+
+<!-- Status flash -->
+<div class="status-flash" id="status-flash"></div>
+
+<script>
+// ── LESSON DATA ──────────────────────────────────────────────────────────────
+const LESSONS = {
+  beginner: [
+    {
+      name: "Home Row Keys",
+      focus: "a s d f g h j k l ;",
+      focusTag: "Home Row",
+      texts: [
+        "asdfjkl; asdfjkl; fdjsalk; fjdksal; asdfjkl;",
+        "sad lad all fall glad shall flask flask hall",
+        "dad had glad fad sad lad add hall shall flag",
+        "jkl; jkl; jkl; fjdk fjdk fjdk asdl asdl asdl",
+        "ask all fall glad had lad sad dad hall flask"
+      ]
+    },
+    {
+      name: "Adding E and I",
+      focus: "a s d e i f j k l",
+      focusTag: "Top Row E I",
+      texts: [
+        "seal deal feel ideal slide side aide like file",
+        "said aide feel idea file like side lied field",
+        "else isle file side ails eide afield aliased",
+        "filed ideal sealed diesel fields sailed liked",
+        "diesel fields ailed sailed ideas ideals files"
+      ]
+    },
+    {
+      name: "Adding T and N",
+      focus: "t n + home row",
+      focusTag: "T and N",
+      texts: [
+        "tent net nest test hint lint tint sent stand",
+        "send tend neat tell last fast land kind find",
+        "tend sent last kind find stand still listen",
+        "listen silent often faint saint taste tense",
+        "dense tense sense final indent student stand"
+      ]
+    },
+    {
+      name: "Adding O and R",
+      focus: "o r + previous",
+      focusTag: "O and R",
+      texts: [
+        "road store floor order forest restore shorter",
+        "forest order restore floor store road short",
+        "sort fort torn born fore more core sore lore",
+        "restore forest floored rooted sorted ordered",
+        "border order forest restore shorter torrent"
+      ]
+    },
+    {
+      name: "Adding H and U",
+      focus: "h u + previous",
+      focusTag: "H and U",
+      texts: [
+        "rush hush lush gush hunt hunt hurt hurt hurl",
+        "hurdle shunt thrust shudder shuffle hurtle",
+        "truth youth south short haste hurl shoulder",
+        "thunder shudder ruthless trundle hustle rush",
+        "shoulder hunter ruthless shudder hustle hurl"
+      ]
+    },
+  ],
+  intermediate: [
+    {
+      name: "Capital Letters",
+      focus: "Shift key + all letters",
+      focusTag: "Capitals",
+      texts: [
+        "The Quick Brown Fox Jumps Over The Lazy Dog",
+        "Pack My Box With Five Dozen Liquor Jugs Now",
+        "India Is A Great Country With Rich Culture",
+        "Ajay Malik Is A Brilliant Person From Ujhana",
+        "The Sun Rises In The East And Sets In West"
+      ]
+    },
+    {
+      name: "Top Row Numbers",
+      focus: "1 2 3 4 5 6 7 8 9 0",
+      focusTag: "Numbers",
+      texts: [
+        "1234567890 the year was 2024 and there were 365 days",
+        "dial 112 for police 101 for fire 108 for ambulance",
+        "India has 29 states and 7 union territories in total",
+        "add 15 and 27 to get 42 then subtract 8 to get 34",
+        "2024 was a great year with 366 days because of leap"
+      ]
+    },
+    {
+      name: "Common Words Flow",
+      focus: "All alphabets",
+      focusTag: "Common Words",
+      texts: [
+        "the quick brown fox jumps over the lazy dog now",
+        "practice makes perfect when you type every day",
+        "learning to type fast helps you work more efficiently",
+        "keep your fingers on the home row for best results",
+        "daily practice of thirty minutes improves your speed"
+      ]
+    },
+    {
+      name: "Punctuation Marks",
+      focus: ", . ! ? : ; ' \"",
+      focusTag: "Punctuation",
+      texts: [
+        "Hello, world! How are you? I am fine, thank you.",
+        "Wait; don't go. Listen: this is important, really.",
+        "She said, \"Hello!\" He replied, \"Hi there, friend.\"",
+        "Run! Jump! Swim! These are action words, right?",
+        "Dear sir, I write to inform you: the work is done."
+      ]
+    },
+    {
+      name: "Symbols Practice",
+      focus: "@ # $ % ^ & * ( )",
+      focusTag: "Symbols",
+      texts: [
+        "email@example.com price is $49.99 for the item",
+        "use #hashtag on social media for 100% reach",
+        "formula: (a+b)^2 = a^2 + 2ab + b^2 always",
+        "phone: +91-9876543210 pincode: 136027 ujhana",
+        "rate: 5% tax on $200 gives $10 extra charge"
+      ]
+    },
+  ],
+  expert: [
+    {
+      name: "Speed Burst",
+      focus: "Maximum speed typing",
+      focusTag: "Speed",
+      texts: [
+        "the rain in spain stays mainly in the plain and the sun always shines",
+        "to be or not to be that is the question whether tis nobler in mind",
+        "all that glitters is not gold often have you heard that told many times",
+        "ask not what your country can do for you ask what you can do for it",
+        "in the beginning god created the heavens and the earth without form"
+      ]
+    },
+    {
+      name: "Programming Code",
+      focus: "Code syntax characters",
+      focusTag: "Code",
+      texts: [
+        "function hello() { return 'Hello, World!'; }",
+        "for (let i = 0; i < 10; i++) { console.log(i); }",
+        "const arr = [1, 2, 3]; arr.map(x => x * 2);",
+        "if (x > 0 && y < 100) { result = x + y; }",
+        "import React from 'react'; export default App;"
+      ]
+    },
+    {
+      name: "Mixed Numbers + Text",
+      focus: "Numbers within sentences",
+      focusTag: "Mixed",
+      texts: [
+        "there are 7 days in a week and 365 days in a year",
+        "the temperature was 42 degrees on May 15, 2024",
+        "order 3 pizzas for 12 people at Rs. 250 each",
+        "train 12345 departs at 10:30 AM from platform 5",
+        "score: Ajay 98 out of 100 in class 10th board exam"
+      ]
+    },
+    {
+      name: "Random Sentences",
+      focus: "All keys combined",
+      focusTag: "Advanced",
+      texts: [
+        "Vivid, bold colors: #FF5733 and #28A745 look great!",
+        "She scored 99.8% on the exam! Brilliant, isn't it?",
+        "\"Hello, World!\" — the first program every coder writes.",
+        "Q: What's 12 * 8? A: It's 96, simple math, right?",
+        "Dr. Singh (MBBS, MD) treated 500+ patients in 2024."
+      ]
+    },
+    {
+      name: "Ujhana Special",
+      focus: "Custom local phrases",
+      focusTag: "Ujhana",
+      texts: [
+        "Ajay Malik from Ujhana is a dedicated typing teacher.",
+        "Ujhana is a town in Jind district of Haryana state.",
+        "Students of Ujhana practice typing every single day.",
+        "TypeMaster was built with love for students of Ujhana.",
+        "Haryana ke students ke liye best typing platform hai."
+      ]
+    },
+  ]
+};
+
+// ── KEYBOARD LAYOUT ──────────────────────────────────────────────────────────
+const KB_ROWS = [
+  ['`','1','2','3','4','5','6','7','8','9','0','-','=','⌫'],
+  ['⇥','q','w','e','r','t','y','u','i','o','p','[',']','\\'],
+  ['⇪','a','s','d','f','g','h','j','k','l',';',"'",'↵'],
+  ['⇧','z','x','c','v','b','n','m',',','.','/','⇧'],
+  ['Ctrl','Alt','SPACE','Alt','Ctrl']
+];
+
+const KB_WIDTHS = [
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+  [1.5,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1.75,1,1,1,1,1,1,1,1,1,1,1,2.25],
+  [2.5,1,1,1,1,1,1,1,1,1,1,2.5],
+  [1.25,1.25,7,1.25,1.25]
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let state = {
+  level: 'beginner',
+  lessonIdx: 0,
+  textIdx: 0,
+  charIdx: 0,
+  typed: [],
+  sessionActive: false,
+  sessionStarted: false,
+  totalTime: 60,
+  timeLeft: 60,
+  timerInterval: null,
+  wpm: 0,
+  correct: 0,
+  errors: 0,
+  totalTyped: 0,
+  loopCount: 1,
+  bestWpm: 0,
+  bestAcc: 0,
+  sessions: 0,
+  streak: 0,
+  bestStreak: 0,
+  currentStreak: 0
+};
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+function init() {
+  buildKeyboard();
+  renderLessonList();
+  loadLesson();
+  loadPersonalBest();
+  document.addEventListener('keydown', onKeyDown);
+  document.getElementById('hidden-input').addEventListener('keydown', e => e.preventDefault());
+}
+
+function buildKeyboard() {
+  const kb = document.getElementById('keyboard');
+  kb.innerHTML = '';
+  KB_ROWS.forEach((row, ri) => {
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'kb-row';
+    row.forEach((k, ki) => {
+      const w = KB_WIDTHS[ri][ki];
+      const keyDiv = document.createElement('div');
+      keyDiv.className = 'key';
+      if (k === 'SPACE') { keyDiv.classList.add('space'); }
+      else if (w >= 2.5) { keyDiv.classList.add('wide-25'); }
+      else if (w >= 2.25) { keyDiv.classList.add('wide-25'); }
+      else if (w >= 2) { keyDiv.classList.add('wide-2'); }
+      else if (w >= 1.75) { keyDiv.classList.add('wide-15'); }
+      else if (w >= 1.5) { keyDiv.classList.add('wide-15'); }
+      keyDiv.textContent = k;
+      keyDiv.id = 'key-' + k.toLowerCase().replace(/[^a-z0-9]/g, '_');
+      if (k === 'SPACE') keyDiv.id = 'key-space';
+      rowDiv.appendChild(keyDiv);
+    });
+    kb.appendChild(rowDiv);
+  });
+}
+
+function getKeyId(char) {
+  if (char === ' ') return 'key-space';
+  const c = char.toLowerCase();
+  return 'key-' + c.replace(/[^a-z0-9]/g, '_');
+}
+
+function highlightKey(char, type) {
+  const id = getKeyId(char);
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove('highlight', 'pressed', 'wrong-press');
+  if (type) el.classList.add(type);
+}
+
+// ── LEVELS & LESSONS ─────────────────────────────────────────────────────────
+function setLevel(level) {
+  state.level = level;
+  state.lessonIdx = 0;
+  document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('level-tag').textContent =
+    level.charAt(0).toUpperCase() + level.slice(1);
+  document.getElementById('level-tag').className =
+    'tag tag-' + level;
+  renderLessonList();
+  resetSession();
+  loadLesson();
+}
+
+function renderLessonList() {
+  const list = document.getElementById('lesson-list');
+  list.innerHTML = '';
+  const lessons = LESSONS[state.level];
+  lessons.forEach((l, i) => {
+    const item = document.createElement('div');
+    item.className = 'lesson-item' + (i === state.lessonIdx ? ' active' : '');
+    item.innerHTML = `<span class="lesson-num">${i+1}</span><span>${l.name}</span>`;
+    item.onclick = () => { state.lessonIdx = i; resetSession(); loadLesson(); renderLessonList(); };
+    list.appendChild(item);
+  });
+}
+
+function loadLesson() {
+  const lessons = LESSONS[state.level];
+  const lesson = lessons[state.lessonIdx];
+  state.textIdx = 0;
+  state.charIdx = 0;
+  state.typed = [];
+  state.loopCount = 1;
+
+  document.getElementById('lesson-name').textContent =
+    `Lesson ${state.lessonIdx+1} — ${lesson.name}`;
+  document.getElementById('lesson-focus').textContent =
+    `Focus: ${lesson.focus}`;
+  document.getElementById('focus-tag').textContent = lesson.focusTag;
+  document.getElementById('current-lesson-label').textContent =
+    `${state.lessonIdx+1} of ${lessons.length}`;
+  document.getElementById('repeat-label').textContent = `Loop 1`;
+
+  renderText();
+  highlightNextKey();
+}
+
+function getCurrentText() {
+  return LESSONS[state.level][state.lessonIdx].texts[state.textIdx];
+}
+
+function renderText() {
+  const text = getCurrentText();
+  const display = document.getElementById('text-display');
+  display.innerHTML = '';
+  for (let i = 0; i < text.length; i++) {
+    const span = document.createElement('span');
+    span.className = 'char';
+    const typedChar = state.typed[i];
+    if (typedChar === undefined) {
+      span.classList.add(i === state.charIdx ? 'cursor' : 'pending');
+      span.textContent = text[i];
+    } else if (typedChar === text[i]) {
+      span.classList.add('correct');
+      span.textContent = text[i];
+    } else {
+      span.classList.add('wrong');
+      span.textContent = text[i];
+    }
+    display.appendChild(span);
+  }
+  updateProgress();
+}
+
+function updateProgress() {
+  const text = getCurrentText();
+  const pct = text.length > 0 ? (state.charIdx / text.length) * 100 : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+function highlightNextKey() {
+  document.querySelectorAll('.key').forEach(k => k.classList.remove('highlight'));
+  if (!state.sessionActive) return;
+  const text = getCurrentText();
+  if (state.charIdx < text.length) {
+    highlightKey(text[state.charIdx], 'highlight');
+  }
+}
+
+// ── SESSION CONTROL ──────────────────────────────────────────────────────────
+function startSession() {
+  if (state.sessionActive) return;
+  state.sessionActive = true;
+  state.sessionStarted = false;
+  state.correct = 0;
+  state.errors = 0;
+  state.totalTyped = 0;
+  state.charIdx = 0;
+  state.typed = [];
+  state.textIdx = 0;
+  state.loopCount = 1;
+  state.timeLeft = state.totalTime;
+  state.currentStreak = 0;
+
+  updateTimerDisplay();
+  renderText();
+  highlightNextKey();
+  focusInput();
+
+  document.getElementById('type-hint').textContent = '⌨️ Start typing...';
+  document.getElementById('start-btn').textContent = '⏸ Running';
+  document.getElementById('repeat-label').textContent = 'Loop 1';
+}
+
+function resetSession() {
+  clearInterval(state.timerInterval);
+  state.sessionActive = false;
+  state.sessionStarted = false;
+  state.charIdx = 0;
+  state.typed = [];
+  state.correct = 0;
+  state.errors = 0;
+  state.totalTyped = 0;
+  state.loopCount = 1;
+  state.timeLeft = state.totalTime;
+  state.currentStreak = 0;
+
+  updateTimerDisplay();
+  updateStats();
+  renderText();
+  document.querySelectorAll('.key').forEach(k => k.classList.remove('highlight','pressed','wrong-press'));
+  document.getElementById('type-hint').textContent = '👆 Click here or press any key to start typing...';
+  document.getElementById('start-btn').textContent = '▶ Start';
+  document.getElementById('progress-fill').style.width = '0%';
+  document.getElementById('repeat-label').textContent = 'Loop 1';
+}
+
+function closeResult() {
+  document.getElementById('result-overlay').classList.remove('show');
+}
+
+function restartSameLesson() {
+  closeResult();
+  resetSession();
+  startSession();
+}
+
+function prevLesson() {
+  if (state.lessonIdx > 0) {
+    state.lessonIdx--;
+  } else {
+    const levels = ['beginner','intermediate','expert'];
+    const li = levels.indexOf(state.level);
+    if (li > 0) {
+      state.level = levels[li-1];
+      state.lessonIdx = LESSONS[state.level].length - 1;
+      document.querySelectorAll('.level-btn').forEach((b,i) => {
+        b.classList.toggle('active', i === li-1);
+      });
+      document.getElementById('level-tag').textContent =
+        state.level.charAt(0).toUpperCase() + state.level.slice(1);
+      document.getElementById('level-tag').className = 'tag tag-' + state.level;
+      renderLessonList();
+    }
+    return;
+  }
+  resetSession();
+  loadLesson();
+  renderLessonList();
+}
+
+function nextLesson() {
+  const lessons = LESSONS[state.level];
+  if (state.lessonIdx < lessons.length - 1) {
+    state.lessonIdx++;
+  } else {
+    const levels = ['beginner','intermediate','expert'];
+    const li = levels.indexOf(state.level);
+    if (li < levels.length - 1) {
+      state.level = levels[li+1];
+      state.lessonIdx = 0;
+      document.querySelectorAll('.level-btn').forEach((b,i) => {
+        b.classList.toggle('active', i === li+1);
+      });
+      document.getElementById('level-tag').textContent =
+        state.level.charAt(0).toUpperCase() + state.level.slice(1);
+      document.getElementById('level-tag').className = 'tag tag-' + state.level;
+      renderLessonList();
+    }
+    return;
+  }
+  resetSession();
+  loadLesson();
+  renderLessonList();
+}
+
+// ── TIMER ────────────────────────────────────────────────────────────────────
+function setTimer(seconds) {
+  state.totalTime = seconds;
+  state.timeLeft = seconds;
+  document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  updateTimerDisplay();
+  if (state.sessionActive) resetSession();
+}
+
+function applyCustomTimer() {
+  const val = parseInt(document.getElementById('custom-min').value);
+  if (val > 0 && val <= 60) {
+    state.totalTime = val * 60;
+    state.timeLeft = state.totalTime;
+    document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+    updateTimerDisplay();
+    if (state.sessionActive) resetSession();
+    showFlash(`Timer set to ${val} minute${val > 1 ? 's' : ''}`, 'good');
+  }
+}
+
+function startTimer() {
+  clearInterval(state.timerInterval);
+  state.timerInterval = setInterval(() => {
+    state.timeLeft--;
+    updateTimerDisplay();
+    if (state.timeLeft <= 0) {
+      clearInterval(state.timerInterval);
+      endSession();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const t = Math.max(0, state.timeLeft);
+  document.getElementById('timer-val').textContent = t;
+  const total = state.totalTime;
+  const pct = t / total;
+  const circumference = 138.2;
+  const offset = circumference * (1 - pct);
+  document.getElementById('timer-ring').style.strokeDashoffset = offset;
+
+  // Color change warning
+  const ring = document.getElementById('timer-ring');
+  if (t < 10) ring.style.stroke = '#ef4444';
+  else if (t < 30) ring.style.stroke = '#f0b429';
+  else ring.style.stroke = '#4f9cf9';
+
+  document.getElementById('hdr-wpm').textContent = state.wpm;
+}
+
+function updateStats() {
+  const elapsed = state.totalTime - state.timeLeft;
+  const minutes = elapsed / 60 || 0.001;
+  state.wpm = Math.round((state.correct / 5) / minutes);
+  if (isNaN(state.wpm) || !isFinite(state.wpm)) state.wpm = 0;
+
+  const totalT = state.correct + state.errors;
+  const acc = totalT > 0 ? Math.round((state.correct / totalT) * 100) : 100;
+
+  document.getElementById('wpm-val').textContent = state.wpm;
+  document.getElementById('acc-val').textContent = acc + '%';
+  document.getElementById('correct-val').textContent = state.correct;
+  document.getElementById('errors-val').textContent = state.errors;
+  document.getElementById('hdr-wpm').textContent = state.wpm;
+  document.getElementById('hdr-acc').textContent = acc + '%';
+}
+
+function endSession() {
+  state.sessionActive = false;
+  state.sessions++;
+
+  const elapsed = state.totalTime;
+  const minutes = elapsed / 60;
+  const finalWpm = Math.round((state.correct / 5) / minutes) || 0;
+  const totalT = state.correct + state.errors;
+  const finalAcc = totalT > 0 ? Math.round((state.correct / totalT) * 100) : 100;
+
+  if (finalWpm > state.bestWpm) state.bestWpm = finalWpm;
+  if (finalAcc > state.bestAcc) state.bestAcc = finalAcc;
+
+  savePersonalBest();
+
+  // Result overlay
+  document.getElementById('res-wpm').textContent = finalWpm;
+  document.getElementById('res-acc').textContent = finalAcc + '%';
+  document.getElementById('res-correct').textContent = state.correct;
+  document.getElementById('res-errors').textContent = state.errors;
+  document.getElementById('res-time').textContent = elapsed + 's';
+  document.getElementById('res-loops').textContent = state.loopCount;
+
+  let grade = '';
+  if (finalWpm >= 80) grade = '🏆 Excellent! Pro-level speed!';
+  else if (finalWpm >= 50) grade = '🌟 Great! You are improving fast!';
+  else if (finalWpm >= 30) grade = '👍 Good work! Keep practicing!';
+  else grade = '💪 Keep going! Practice makes perfect!';
+
+  document.getElementById('result-sub').textContent = grade;
+  document.getElementById('result-overlay').classList.add('show');
+  document.getElementById('start-btn').textContent = '▶ Start';
+  document.querySelectorAll('.key').forEach(k => k.classList.remove('highlight','pressed','wrong-press'));
+}
+
+// ── TYPING HANDLER ───────────────────────────────────────────────────────────
+function focusInput() {
+  document.getElementById('hidden-input').focus();
+}
+
+function onKeyDown(e) {
+  if (!state.sessionActive) {
+    if (e.key.length === 1 || e.key === ' ') {
+      startSession();
+      return;
+    }
+    return;
+  }
+
+  if (e.key === 'Tab') { e.preventDefault(); return; }
+  if (e.key === 'Escape') { resetSession(); return; }
+  if (e.key === 'Backspace') { e.preventDefault(); return; }
+
+  if (e.key.length !== 1) return;
+  e.preventDefault();
+
+  if (!state.sessionStarted) {
+    state.sessionStarted = true;
+    startTimer();
+  }
+
+  const text = getCurrentText();
+  const expected = text[state.charIdx];
+  const typed = e.key;
+
+  // Flash key
+  highlightKey(typed, typed === expected ? 'pressed' : 'wrong-press');
+  setTimeout(() => {
+    highlightKey(typed, '');
+    highlightNextKey();
+  }, 100);
+
+  if (typed === expected) {
+    state.typed[state.charIdx] = typed;
+    state.correct++;
+    state.totalTyped++;
+    state.currentStreak++;
+    if (state.currentStreak > state.bestStreak) {
+      state.bestStreak = state.currentStreak;
+      document.getElementById('hdr-streak').textContent = state.bestStreak;
+    }
+    state.charIdx++;
+
+    // End of current text?
+    if (state.charIdx >= text.length) {
+      // Move to next text or loop
+      const texts = LESSONS[state.level][state.lessonIdx].texts;
+      state.textIdx = (state.textIdx + 1) % texts.length;
+      if (state.textIdx === 0) {
+        state.loopCount++;
+        document.getElementById('repeat-label').textContent = `Loop ${state.loopCount}`;
+      }
+      state.charIdx = 0;
+      state.typed = [];
+    }
+  } else {
+    state.errors++;
+    state.totalTyped++;
+    state.currentStreak = 0;
+    state.typed[state.charIdx] = typed;
+    // Still advance cursor so flow continues
+    state.charIdx++;
+    if (state.charIdx >= text.length) {
+      const texts = LESSONS[state.level][state.lessonIdx].texts;
+      state.textIdx = (state.textIdx + 1) % texts.length;
+      if (state.textIdx === 0) {
+        state.loopCount++;
+        document.getElementById('repeat-label').textContent = `Loop ${state.loopCount}`;
+      }
+      state.charIdx = 0;
+      state.typed = [];
+    }
+  }
+
+  renderText();
+  updateStats();
+  highlightNextKey();
+}
+
+// ── PERSONAL BEST ────────────────────────────────────────────────────────────
+function savePersonalBest() {
+  try {
+    const data = { wpm: state.bestWpm, acc: state.bestAcc, sessions: state.sessions };
+    localStorage.setItem('typemaster_pb', JSON.stringify(data));
+  } catch(e) {}
+  updatePBDisplay();
+}
+
+function loadPersonalBest() {
+  try {
+    const raw = localStorage.getItem('typemaster_pb');
+    if (raw) {
+      const d = JSON.parse(raw);
+      state.bestWpm = d.wpm || 0;
+      state.bestAcc = d.acc || 0;
+      state.sessions = d.sessions || 0;
+    }
+  } catch(e) {}
+  updatePBDisplay();
+}
+
+function updatePBDisplay() {
+  document.getElementById('pb-wpm').textContent = state.bestWpm > 0 ? state.bestWpm + ' WPM' : '—';
+  document.getElementById('pb-acc').textContent = state.bestAcc > 0 ? state.bestAcc + '%' : '—';
+  document.getElementById('pb-sessions').textContent = state.sessions;
+}
+
+// ── FLASH MESSAGE ─────────────────────────────────────────────────────────────
+function showFlash(msg, type) {
+  const el = document.getElementById('status-flash');
+  el.textContent = msg;
+  el.className = 'status-flash show ' + (type || '');
+  setTimeout(() => { el.classList.remove('show'); }, 2000);
+}
+
+// ── START ─────────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
